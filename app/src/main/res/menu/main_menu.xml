@@ -4,13 +4,13 @@
     <item
         android:id="@+id/newItem"
         android:icon="@drawable/icons8_department_shop"
-        android:title="New" />
+        android:title="@string/new_site" />
     <item
         android:id="@+id/mapItem"
-        android:icon="@drawable/icons8_map_marker"
-        android:title="Map" />
+        android:icon="@drawable/map"
+        android:title="@string/map" />
     <item
         android:id="@+id/searchItem"
-        android:icon="@drawable/icons8_treasure_map_50"
-        android:title="Search" />
+        android:icon="@drawable/import_contacts"
+        android:title="@string/search" />
 </menu>

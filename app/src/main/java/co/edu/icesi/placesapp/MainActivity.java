@@ -1,6 +1,7 @@
 package co.edu.icesi.placesapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -10,9 +11,8 @@ import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /** <a target="_blank" href="https://icons8.com/icons/set/shop-department">Department Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
- * <a target="_blank" href="https://icons8.com/icons/set/map-marker--v1">Map Marker icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
- * <a target="_blank" href="https://icons8.com/icons/set/marker--v1">Marker icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
- * <a target="_blank" href="https://icons8.com/icons/set/treasure-map">Treasure Map icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+ * <a href="https://iconscout.com/icons/import-contacts" target="_blank">Import contacts Icon</a> on <a href="https://iconscout.com">Iconscout</a>
+ * <a href="https://iconscout.com/icons/add" target="_blank">Add Icon</a> on <a href="https://iconscout.com">Iconscout</a>
  * */
 public class MainActivity extends AppCompatActivity {
 
@@ -22,12 +22,15 @@ public class MainActivity extends AppCompatActivity {
     private SearchItemFragment searchItemFragment;
 
     private BottomNavigationView navigator;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         navigator = findViewById(R.id.navigator);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         newItemFragment = NewItemFragment.newInstance();
         mapItemFragment = MapItemFragment.newInstance();

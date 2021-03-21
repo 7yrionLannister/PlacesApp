@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">PlacesApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <!--Main activity strings-->
+
+    <!--BottomNavigationBar strings-->
+    <string name="new_site">Nuevo</string>
+    <string name="map">Mapa</string>
+    <string name="search">Buscar</string>
+    <!--New site strings-->
+    <string name="new_site_title">Agregar un sitio</string>
+    <string name="new_site_description">En esta seccion puede inscribir un sitio de la ciudad. Nombre el lugar y luego con el boton de mapa, seleccione un punto en el mapa</string>
+    <string name="new_site_data">Datos</string>
+    <string name="new_site_name_placeholder">Nombre del sitio</string>
+    <string name="new_site_address">Direccion del sitio seleccionado</string>
+    <string name="new_site_images">Imagenes</string>
+    <string name="register_new_site">Registrar</string>
+    <!--Map strings-->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -40,7 +40,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public void onBindViewHolder(@NonNull PlaceView holder, int position) {
         holder.getName().setText(places.get(position).getName());
         holder.getScore().setText(""+places.get(position).getScore());
-        Bitmap bitMap = BitmapFactory.decodeFile("/drawable/add.png");
+        Bitmap bitMap = BitmapFactory.decodeFile(places.get(position).getImage());
         holder.getImage().setImageBitmap(bitMap);
 
     }

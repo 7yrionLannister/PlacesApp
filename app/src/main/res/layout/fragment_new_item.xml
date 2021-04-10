@@ -38,18 +38,18 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/siteAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto_regular"
             android:text="@string/new_site_address"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/mapButton"
-            app:layout_constraintTop_toTopOf="@+id/mapButton" />
+            app:layout_constraintStart_toEndOf="@+id/mapBtn"
+            app:layout_constraintTop_toTopOf="@+id/mapBtn" />
 
         <ImageButton
-            android:id="@+id/mapButton"
+            android:id="@+id/mapBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="32dp"
@@ -88,8 +88,8 @@
             android:id="@+id/newSiteAddressTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintStart_toStartOf="@+id/siteAddress"
+            app:layout_constraintTop_toBottomOf="@+id/siteAddress" />
 
         <TextView
             android:id="@+id/textView7"
@@ -98,10 +98,10 @@
             android:layout_marginTop="48dp"
             android:text="@string/new_site_images"
             app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/mapButton" />
+            app:layout_constraintTop_toBottomOf="@+id/mapBtn" />
 
         <ImageButton
-            android:id="@+id/addImageButton"
+            android:id="@+id/addImageBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -113,13 +113,13 @@
             app:srcCompat="@drawable/add" />
 
         <Button
-            android:id="@+id/registerButton"
+            android:id="@+id/registerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/register_new_site"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addImageButton" />
+            app:layout_constraintTop_toBottomOf="@+id/addImageBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

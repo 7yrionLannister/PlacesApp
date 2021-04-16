@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchItemFragment searchItemFragment;
 
     private BottomNavigationView navigator;
-    private Toolbar toolbar;
 
     private static final int PERMISSIONS_CALLBACK = 11;
     @Override
@@ -36,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navigator = findViewById(R.id.navigator);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         newItemFragment = NewItemFragment.newInstance();
         mapItemFragment = MapItemFragment.newInstance();
@@ -66,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
         }, PERMISSIONS_CALLBACK);
     }
 

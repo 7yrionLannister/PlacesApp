@@ -77,7 +77,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="59dp"
             android:ems="10"
-            android:hint="@string/new_site_name_placeholder"
+            android:hint="@string/site_name_placeholder"
             android:inputType="textPersonName"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

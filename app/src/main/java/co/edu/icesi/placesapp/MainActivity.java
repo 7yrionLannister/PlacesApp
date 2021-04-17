@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -40,8 +41,18 @@ public class MainActivity extends AppCompatActivity {
         mapItemFragment = MapItemFragment.newInstance();
         searchItemFragment = SearchItemFragment.newInstance();
 
-        showFragment(newItemFragment);
+        // se recuperan los extras en caso de que se venga de MapsActivity
+        Bundle extras = getIntent().getExtras();
+        Fragment toFragment = newItemFragment;
+        if(extras != null) {
+            String to = extras.getString("searchitem");
+            if (to != null) {
+                toFragment = searchItemFragment;
+                navigator.setSelectedItemId(R.id.searchItem);
+            }
+        }
 
+        showFragment(toFragment);
         navigator.setOnNavigationItemSelectedListener(
                 (menuItem)->{
                     switch(menuItem.getItemId()){
@@ -49,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(newItemFragment);
                             break;
                         case R.id.mapItem:
-                            showFragment(mapItemFragment);
+                            //showFragment(mapItemFragment);
+                            Intent i = new Intent(this, MapsActivity.class);
+                            startActivity(i);
+                            finish(); // FIXME hago esto para evitar la pila de ventanas (que te puedas devolver con el boton de regresar) pero no se si es correcto
                             break;
                         case R.id.searchItem:
                             showFragment(searchItemFragment);
@@ -76,6 +90,4 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
     }
-
-
 }

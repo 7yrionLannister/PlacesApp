@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker me;
     private boolean track;
     private ArrayList<Marker> markers;
+
+    private BottomNavigationView navigator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         markers = new ArrayList<>();
+
+        navigator = findViewById(R.id.navigatorMap);
+        navigator.setSelectedItemId(R.id.mapItem);
+        navigator.setOnNavigationItemSelectedListener(
+                (menuItem)->{
+                    switch(menuItem.getItemId()){
+                        case R.id.newItem:
+                            Intent toNewItem = new Intent(this, MainActivity.class);
+                            toNewItem.putExtra("newitem", "newitem");
+                            startActivity(toNewItem);
+                            finish(); // FIXME hago esto para evitar la pila de ventanas (que te puedas devolver con el boton de regresar) pero no se si es correcto
+                            break;
+                        case R.id.mapItem:
+                            //showFragment(mapItemFragment);
+                            break;
+                        case R.id.searchItem:
+                            Intent toSearchItem = new Intent(this, MainActivity.class);
+                            toSearchItem.putExtra("searchitem", "searchitem");
+                            startActivity(toSearchItem);
+                            finish(); // FIXME hago esto para evitar la pila de ventanas (que te puedas devolver con el boton de regresar) pero no se si es correcto
+                            break;
+                    }
+
+                    return true; // le estoy diciendo que si estoy manejando la acción de la barra
+                }
+        );
     }
 
     @SuppressLint("MissingPermission")

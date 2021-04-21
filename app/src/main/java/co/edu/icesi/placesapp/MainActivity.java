@@ -60,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(newItemFragment);
                             break;
                         case R.id.mapItem:
-                            //showFragment(mapItemFragment);
-                            Intent i = new Intent(this, MapsActivity.class);
-                            startActivity(i);
-                            finish(); // FIXME hago esto para evitar la pila de ventanas (que te puedas devolver con el boton de regresar) pero no se si es correcto
+                            showFragment(mapItemFragment);
+//                            Intent i = new Intent(this, MapsActivity.class);
+//                            startActivity(i);
+//                            finish(); // FIXME hago esto para evitar la pila de ventanas (que te puedas devolver con el boton de regresar) pero no se si es correcto
                             break;
                         case R.id.searchItem:
                             showFragment(searchItemFragment);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -121,5 +122,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addImageBtn" />
+
+        <ImageView
+            android:id="@+id/selectedImage"
+            android:layout_width="66dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="20dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/registerBtn"
+            app:layout_constraintStart_toEndOf="@+id/addImageBtn"
+            tools:srcCompat="@tools:sample/avatars" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

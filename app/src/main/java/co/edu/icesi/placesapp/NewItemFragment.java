@@ -2,9 +2,12 @@ package co.edu.icesi.placesapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -30,10 +34,11 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private TextView siteAddress;
     private ImageButton addImageBtn;
     private Button registerBtn;
-
+    private ImageView selectedImage;
     private File file;
 
     private static final int CAMERA_CALLBACK=11;
+    private static final int GALLERY_CALLBACK =12;
     public NewItemFragment() {
         // Required empty public constructor
     }
@@ -57,7 +62,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         siteAddress = root.findViewById(R.id.siteAddress);
         addImageBtn = root.findViewById(R.id.addImageBtn);
         registerBtn = root.findViewById(R.id.registerBtn);
-
+        selectedImage = root.findViewById(R.id.selectedImage);
         mapBtn.setOnClickListener(this);
         addImageBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
@@ -77,13 +82,15 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                 switch (which) {
                     case 0:  //camera
                         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                       file = new File(getContext().getExternalFilesDir(null), "photo.png");
+                       file = new File(getContext().getExternalFilesDir(null), "/photo.png");
                        Uri uri = FileProvider.getUriForFile(getContext(),getContext().getPackageName(), file);
                        i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                        startActivityForResult(i, CAMERA_CALLBACK);
                         break;
                     case 1: //galery
-
+                        Intent j = new Intent(Intent.ACTION_GET_CONTENT);
+                        j.setType("image/*");
+                        startActivityForResult(j, GALLERY_CALLBACK);
                         break;
                 }
             }
@@ -93,7 +100,20 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         dialog.show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == CAMERA_CALLBACK && resultCode == getActivity().RESULT_OK){
+            Bitmap image = BitmapFactory.decodeFile(file.getPath());
+            selectedImage.setImageBitmap(image);
+        }else if(requestCode == GALLERY_CALLBACK && resultCode == getActivity().RESULT_OK){
+            Uri uri = data.getData();
+            String path = UtilDomi.getPath(getContext(),uri);
+            Bitmap image = BitmapFactory.decodeFile(path);
+            selectedImage.setImageBitmap(image);
+        }
+    }
 
     @Override
     public void onClick(View v) {

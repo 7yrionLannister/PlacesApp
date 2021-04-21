@@ -17,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 public class MapItemFragment extends Fragment  implements OnMapReadyCallback {
 
     private GoogleMap map;
+    private MapView mapView;
 
     public MapItemFragment() {
         // Required empty public constructor
@@ -30,6 +31,7 @@ public class MapItemFragment extends Fragment  implements OnMapReadyCallback {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,7 +40,8 @@ public class MapItemFragment extends Fragment  implements OnMapReadyCallback {
 //        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
 //                .findFragmentById(R.id.mapfragment);
 
-        MapView mapView = (MapView)  view.findViewById(R.id.mapFragment);
+        mapView = view.findViewById(R.id.mapFragment);
+        mapView.onCreate(savedInstanceState);
 //        if(mapFragment == null){
 //            // Create new Map instance if it doesn't exist
 //            mapFragment = SupportMapFragment.newInstance();
@@ -50,6 +53,50 @@ public class MapItemFragment extends Fragment  implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (mapView != null) {
+            mapView.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mapView != null) {
+            try {
+                mapView.onDestroy();
+            } catch (NullPointerException e) {
+
+            }
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mapView != null) {
+            mapView.onLowMemory();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mapView != null) {
+            mapView.onSaveInstanceState(outState);
+        }
     }
 
 }

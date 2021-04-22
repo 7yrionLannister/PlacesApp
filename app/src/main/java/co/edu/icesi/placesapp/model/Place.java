@@ -1,4 +1,4 @@
-package co.edu.icesi.placesapp;
+package co.edu.icesi.placesapp.model;
 
 public class Place {
     private String name;

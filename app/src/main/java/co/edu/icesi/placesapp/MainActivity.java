@@ -1,18 +1,13 @@
 package co.edu.icesi.placesapp;
 
-import androidx.appcompat.app.AlertDialog;
+import android.Manifest;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.Manifest;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -24,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     // la actividad debe tener los fragmentos que hostea
     private NewItemFragment newItemFragment;
-    private MapItemFragment mapItemFragment;
+    private MapsFragment mapsFragment;
     private SearchItemFragment searchItemFragment;
 
     private BottomNavigationView navigator;
@@ -38,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         navigator = findViewById(R.id.navigator);
 
         newItemFragment = NewItemFragment.newInstance();
-        mapItemFragment = MapItemFragment.newInstance();
+        mapsFragment = MapsFragment.newInstance();
         searchItemFragment = SearchItemFragment.newInstance();
 
         // se recuperan los extras en caso de que se venga de MapsActivity
@@ -60,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(newItemFragment);
                             break;
                         case R.id.mapItem:
-                            showFragment(mapItemFragment);
-//                            Intent i = new Intent(this, MapsActivity.class);
-//                            startActivity(i);
-//                            finish(); // FIXME hago esto para evitar la pila de ventanas (que te puedas devolver con el boton de regresar) pero no se si es correcto
+                            showFragment(mapsFragment);
                             break;
                         case R.id.searchItem:
                             showFragment(searchItemFragment);

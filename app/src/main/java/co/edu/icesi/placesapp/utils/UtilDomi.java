@@ -1,4 +1,4 @@
-package co.edu.icesi.placesapp;
+package co.edu.icesi.placesapp.utils;
 
 import android.content.ContentUris;
 import android.content.Context;

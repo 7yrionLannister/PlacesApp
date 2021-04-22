@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.edu.icesi.placesapp.model.Place;
+
 public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
 
     private List<Place> places;

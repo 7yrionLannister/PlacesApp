@@ -12,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+
+import co.edu.icesi.placesapp.utils.UtilDomi;
 
 
 public class NewItemFragment extends Fragment implements View.OnClickListener {

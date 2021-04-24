@@ -31,9 +31,8 @@ public class PlaceImagesAdapter extends RecyclerView.Adapter<PlaceImageView> {
     @Override
     public PlaceImageView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View root = inflater.inflate(R.layout.place_image_row, null);
-        ConstraintLayout rowroot= (ConstraintLayout) root;
-        PlaceImageView placeImageView = new PlaceImageView(rowroot);
+        View root = inflater.inflate(R.layout.place_image_row, parent, false);
+        PlaceImageView placeImageView = new PlaceImageView(root);
         return placeImageView;
     }
 
@@ -41,7 +40,7 @@ public class PlaceImagesAdapter extends RecyclerView.Adapter<PlaceImageView> {
     public void onBindViewHolder(@NonNull PlaceImageView holder, int position) {
         Bitmap bitMap = BitmapFactory.decodeFile(images.get(position));
         holder.getImage().setImageBitmap(bitMap);
-        Log.e(">>>", "onBindViewHolder");
+        Log.e(">>>", "onBindViewHolder" + position);
     }
 
     @Override
@@ -50,13 +49,19 @@ public class PlaceImagesAdapter extends RecyclerView.Adapter<PlaceImageView> {
     }
 
     public void addImages(List<String> imagePaths) {
-        images.addAll(imagePaths);
+        for(String img : imagePaths) {
+            if(!images.contains(img)) {
+                images.add(img);
+            }
+        }
         notifyDataSetChanged();
     }
 
     public void addImages(String[] imagePaths) {
         for(String img : imagePaths) {
-            images.add(img);
+            if(!images.contains(img)) {
+                images.add(img);
+            }
         }
         notifyDataSetChanged();
     }

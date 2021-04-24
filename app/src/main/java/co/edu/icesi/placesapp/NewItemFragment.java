@@ -1,5 +1,6 @@
 package co.edu.icesi.placesapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
+import co.edu.icesi.placesapp.model.Place;
 import co.edu.icesi.placesapp.utils.UtilDomi;
 
 
@@ -54,6 +56,8 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private String from;
     private ArrayList<String> imagePaths;
 
+    private SharedPreferences sp;
+    
     public NewItemFragment() {
         // Required empty public constructor
     }
@@ -72,6 +76,10 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_new_item, container, false);
+        
+        // get shared preferences
+        sp = getActivity().getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
+        
         siteNameET = root.findViewById(R.id.siteNameET);
         mapBtn = root.findViewById(R.id.mapBtn);
         siteAddress = root.findViewById(R.id.siteAddress);
@@ -91,17 +99,14 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         selectedImages.setAdapter(adapter);
 
         imagePaths = new ArrayList<>();
-
-        SharedPreferences sp = getContext().getSharedPreferences("From_ToNewItemFragment",Context.MODE_PRIVATE);
-        SharedPreferences sp2 = getContext().getSharedPreferences("state",Context.MODE_PRIVATE);
         from = sp.getString("from", "no_from");
 
         if(from.equals("MapsFragment")){
             String address =sp.getString("address", "no_address");
             siteAddress.setText(address);
-            String name = sp2.getString("name", "no_name");
+            String name = sp.getString("name", "no_name");
             siteNameET.setText(name);
-            String imageP = sp2.getString("imagePath", "no_path");
+            String imageP = sp.getString("imagePath", "no_path");
             Log.e(">>>>", imageP);
             if(!imageP.isEmpty()) {
                 adapter.addImages(imageP.split(","));
@@ -162,22 +167,21 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        MainActivity activity = (MainActivity) getActivity();
         switch (v.getId()) {
             case R.id.mapBtn:
-                SharedPreferences sp = getContext().getSharedPreferences("From", Context.MODE_PRIVATE);
                 sp.edit().putString("from", "newItemFragment").apply();
-                ((MainActivity) this.getActivity()).showFragment(((MainActivity) this.getActivity()).getMapsFragment());
-
-                SharedPreferences sp2 = getContext().getSharedPreferences("state", Context.MODE_PRIVATE);
-                sp2.edit().putString("name", siteNameET.getText().toString()).apply();
-                sp2.edit().putString("imagePath", imagePaths.toString().replace("[", "").replace("]", "").replace(" ", "")).apply();
+                activity.showFragment(activity.getMapsFragment());
+                sp.edit().putString("name", siteNameET.getText().toString()).apply();
+                sp.edit().putString("imagePath", imagePaths.toString().replace("[", "").replace("]", "").replace(" ", "")).apply();
                 break;
             case R.id.addImageBtn:
                 showAlertDialogButtonClicked();
             break;
             case R.id.registerBtn:
+                Place place = new Place(siteNameET.getText().toString(), imagePaths, 0);
+                activity.registerPlace(place);
                 break;
-
         }
     }
 }

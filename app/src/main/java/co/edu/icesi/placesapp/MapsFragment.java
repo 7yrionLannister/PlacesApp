@@ -40,8 +40,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private ArrayList<Marker> markers;
     private ConstraintLayout confirmationPopup;
 
+    private SharedPreferences sp;
+
     private Button continueBtn;
     private String from;  // me dice de donde viene el usuario si de newItemFragment o de click en el navigator
+
     public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
         Bundle args = new Bundle();
@@ -80,7 +83,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
         markers = new ArrayList<>(); // FIXME pedir de persistencia cuando este implementada
 
-        SharedPreferences sp = getContext().getSharedPreferences("From", Context.MODE_PRIVATE);
+        sp = getContext().getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         from = sp.getString("from", "from");
         // verifico de donde viene el usuario
         if(from.equals("newItemFragment")){     // si viene desde newItemFragment debo dejarle el mapa libre para que escoja la ubicacion
@@ -149,7 +152,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                        try {
                            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                            String add = addresses.get(0).getAddressLine(0)+"\n";
-                           SharedPreferences sp = getContext().getSharedPreferences("From_ToNewItemFragment", Context.MODE_PRIVATE);
                            sp.edit().putString("from", "MapsFragment").apply();
                            sp.edit().putString("address", add).apply();
                            ((MainActivity) this.getActivity()).showFragment(((MainActivity) this.getActivity()).getNewItemFragment());
@@ -159,7 +161,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                        }
                    });
        }
-
     }
 
     @Override

@@ -128,13 +128,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/place_images_list_view"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="4dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/registerBtn"
+            app:layout_constraintBottom_toBottomOf="@+id/addImageBtn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/addImageBtn" />
+            app:layout_constraintStart_toEndOf="@+id/addImageBtn"
+            app:layout_constraintTop_toTopOf="@+id/addImageBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

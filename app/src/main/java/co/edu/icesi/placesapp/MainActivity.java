@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -12,6 +13,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import co.edu.icesi.placesapp.model.Place;
 
 /** <a target="_blank" href="https://icons8.com/icons/set/shop-department">Department Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
  * <a href="https://iconscout.com/icons/import-contacts" target="_blank">Import contacts Icon</a> on <a href="https://iconscout.com">Iconscout</a>
@@ -25,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private SearchItemFragment searchItemFragment;
 
     private BottomNavigationView navigator;
+    private List<Place> places;
+
+    private SharedPreferences sp;
+    public static final String PREFERENCES = "places-data";
 
     private static final int PERMISSIONS_CALLBACK = 11;
     @Override
@@ -32,13 +42,47 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigator = findViewById(R.id.navigator);
+        // get shared preferences
+        sp = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sp.edit().putString("from", "startApp").apply();
 
         newItemFragment = NewItemFragment.newInstance();
         mapsFragment = MapsFragment.newInstance();
         searchItemFragment = SearchItemFragment.newInstance();
 
+        configureNavigator();
         showFragment(newItemFragment);
+
+        requestPermissions();
+        loadPersistentData();
+    }
+
+    private void loadPersistentData() {
+        places = new ArrayList<>();
+
+        String placesStrings = sp.getString("places", "no_places");
+        if(!placesStrings.equals("no_places")) {
+            placesStrings = placesStrings.replace("[", "").replace("]", "");
+            String[] placesArray = placesStrings.split(",");
+            for(String place : placesArray) {
+                Log.e(">>> Place = ", place);
+                String[] placeSplit = place.split(";");
+                String name = placeSplit[0];
+                String[] images = placeSplit[1].split(":");
+                List<String> imgs = new ArrayList<>();
+                for(String img : images) {
+                    imgs.add(img);
+                }
+                String score = placeSplit[2];
+
+                Place p = new Place(name, imgs, Double.parseDouble(score));
+            }
+        }
+    }
+
+    private void configureNavigator() {
+        navigator = findViewById(R.id.navigator);
+
         navigator.setOnNavigationItemSelectedListener(
                 (menuItem)->{
                     switch(menuItem.getItemId()){
@@ -46,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(newItemFragment);
                             break;
                         case R.id.mapItem:
-                            SharedPreferences sp = getSharedPreferences("From", Context.MODE_PRIVATE);
                             sp.edit().putString("from", "navigator").apply();
                             showFragment(mapsFragment);
                             break;
@@ -54,11 +97,12 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(searchItemFragment);
                             break;
                     }
-
                     return true; // le estoy diciendo que si estoy manejando la acción de la barra
                 }
         );
+    }
 
+    private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -66,9 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
         }, PERMISSIONS_CALLBACK);
-
-        SharedPreferences sp = getSharedPreferences("From_ToNewItemFragment", Context.MODE_PRIVATE);
-        sp.edit().putString("from", "startApp").apply();
     }
 
     public void showFragment(Fragment fragment){
@@ -84,5 +125,10 @@ public class MainActivity extends AppCompatActivity {
     }
     public NewItemFragment getNewItemFragment() {
         return this.newItemFragment;
+    }
+
+    public void registerPlace(Place place) {
+        places.add(place);
+        sp.edit().putString("places", places.toString()).apply();
     }
 }

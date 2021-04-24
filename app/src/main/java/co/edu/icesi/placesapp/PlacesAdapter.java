@@ -21,7 +21,6 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
 
     public PlacesAdapter() {
         places = new ArrayList<>();
-        places.add(new Place("ches", "im", 4.5));
     }
 
     public void addPlace(Place place){
@@ -42,7 +41,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public void onBindViewHolder(@NonNull PlaceView holder, int position) {
         holder.getName().setText(places.get(position).getName());
         holder.getScore().setText(""+places.get(position).getScore());
-        Bitmap bitMap = BitmapFactory.decodeFile(places.get(position).getImage());
+        Bitmap bitMap = BitmapFactory.decodeFile(places.get(position).getImages().get(0));
         holder.getImage().setImageBitmap(bitMap);
 
     }

@@ -38,17 +38,6 @@ public class MainActivity extends AppCompatActivity {
         mapsFragment = MapsFragment.newInstance();
         searchItemFragment = SearchItemFragment.newInstance();
 
-        // se recuperan los extras en caso de que se venga de MapsActivity
-//        Bundle extras = getIntent().getExtras();
-//        Fragment toFragment = newItemFragment;
-//        if(extras != null) {
-//            String to = extras.getString("searchitem");
-//            if (to != null) {
-//                toFragment = searchItemFragment;
-//                navigator.setSelectedItemId(R.id.searchItem);
-//            }
-//        }
-
         showFragment(newItemFragment);
         navigator.setOnNavigationItemSelectedListener(
                 (menuItem)->{

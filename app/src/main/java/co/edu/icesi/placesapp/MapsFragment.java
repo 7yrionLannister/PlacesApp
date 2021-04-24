@@ -1,31 +1,25 @@
 package co.edu.icesi.placesapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +38,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private LocationManager locationManager;
     private boolean track;
     private ArrayList<Marker> markers;
+    private ConstraintLayout confirmationPopup;
 
     private Button continueBtn;
     private String from;  // me dice de donde viene el usuario si de newItemFragment o de click en el navigator
@@ -62,6 +56,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         continueBtn = view.findViewById(R.id.continueBtn);
+        confirmationPopup = view.findViewById(R.id.confirm_location_popup);
         return view;
 
     }
@@ -98,11 +93,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMarkerClickListener(this);
+
+        mMap.setMyLocationEnabled(true); // poner un punto azul en la ubicacion actual
     }
     // viene de click en el icono mapa de newItemFragment
     public void op1(){
-        Toast toast =Toast.makeText(getContext(),"Sostenga el toque para ubicar el lugar",Toast.LENGTH_SHORT);
-        toast.show();
+        confirmationPopup.setVisibility(View.VISIBLE);
     }
     // viene de dar click en mapa del navigation bar
     public void op2(){
@@ -133,7 +129,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     @Override
     public void onMapClick(LatLng latLng) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
     }
 
     public void setTrack(boolean track) {
@@ -142,7 +138,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-       if(from.equals("newItemFragment")){
+       if(from.equals("newItemFragment")) {
            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("New marker"));
            markers.add(marker);
 
@@ -162,7 +158,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                            e.printStackTrace();
                        }
                    });
-
        }
 
     }

@@ -32,7 +32,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     @Override
     public PlaceView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View root = inflater.inflate(R.layout.placerow, null);
+        View root = inflater.inflate(R.layout.place_row, null);
         ConstraintLayout rowroot= (ConstraintLayout) root;
         PlaceView placeView = new PlaceView(rowroot);
         return placeView;

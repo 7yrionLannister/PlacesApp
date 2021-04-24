@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -26,11 +28,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.UUID;
 
 import co.edu.icesi.placesapp.utils.UtilDomi;
 
 
 public class NewItemFragment extends Fragment implements View.OnClickListener {
+
+    private RecyclerView selectedImages;
+    private PlaceImagesAdapter adapter;
 
     //State
     private EditText siteNameET;
@@ -38,14 +46,14 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private TextView siteAddress;
     private ImageButton addImageBtn;
     private Button registerBtn;
-    private ImageView selectedImage;
     private File file;
 
     private static final int CAMERA_CALLBACK=11;
     private static final int GALLERY_CALLBACK =12;
 
     private String from;
-    private String imagePath;
+    private ArrayList<String> imagePaths;
+
     public NewItemFragment() {
         // Required empty public constructor
     }
@@ -69,15 +77,25 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         siteAddress = root.findViewById(R.id.siteAddress);
         addImageBtn = root.findViewById(R.id.addImageBtn);
         registerBtn = root.findViewById(R.id.registerBtn);
-        selectedImage = root.findViewById(R.id.selectedImage);
+
         mapBtn.setOnClickListener(this);
         addImageBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
 
-        imagePath = "";
+        selectedImages = root.findViewById(R.id.place_images_list_view);
+        selectedImages.setHasFixedSize(true);
+        LinearLayoutManager layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        selectedImages.setLayoutManager(layout);
+
+        adapter = new PlaceImagesAdapter();
+        selectedImages.setAdapter(adapter);
+
+        imagePaths = new ArrayList<>();
+
         SharedPreferences sp = getContext().getSharedPreferences("From_ToNewItemFragment",Context.MODE_PRIVATE);
         SharedPreferences sp2 = getContext().getSharedPreferences("state",Context.MODE_PRIVATE);
         from = sp.getString("from", "no_from");
+
         if(from.equals("MapsFragment")){
             String address =sp.getString("address", "no_address");
             siteAddress.setText(address);
@@ -86,8 +104,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
             String imageP = sp2.getString("imagePath", "no_path");
             Log.e(">>>>", imageP);
             if(!imageP.isEmpty()) {
-                Bitmap image = BitmapFactory.decodeFile(imagePath);
-                selectedImage.setImageBitmap(image);
+                adapter.addImages(imageP.split(","));
             }
         }else if(from.equals("startApp")){
 
@@ -107,8 +124,8 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:  //camera
-                        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                       file = new File(getContext().getExternalFilesDir(null), "/photo.png");
+                       Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                       file = new File(getContext().getExternalFilesDir(null), "/photo" + UUID.randomUUID().toString() + ".png");
                        Uri uri = FileProvider.getUriForFile(getContext(),getContext().getPackageName(), file);
                        i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                        startActivityForResult(i, CAMERA_CALLBACK);
@@ -131,14 +148,14 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == CAMERA_CALLBACK && resultCode == getActivity().RESULT_OK){
-            imagePath = file.getPath();
-            Bitmap image = BitmapFactory.decodeFile(imagePath);
-            selectedImage.setImageBitmap(image);
+            String imagePath = file.getPath();
+            imagePaths.add(imagePath);
+            adapter.addImages(imagePaths);
         }else if(requestCode == GALLERY_CALLBACK && resultCode == getActivity().RESULT_OK){
             Uri uri = data.getData();
-            imagePath = UtilDomi.getPath(getContext(),uri);
-            Bitmap image = BitmapFactory.decodeFile(imagePath);
-            selectedImage.setImageBitmap(image);
+            String imagePath = UtilDomi.getPath(getContext(),uri);
+            imagePaths.add(imagePath);
+            adapter.addImages(imagePaths);
             Log.e(">>>>", "path original : "+ imagePath);
         }
     }
@@ -153,7 +170,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
 
                 SharedPreferences sp2 = getContext().getSharedPreferences("state", Context.MODE_PRIVATE);
                 sp2.edit().putString("name", siteNameET.getText().toString()).apply();
-                sp2.edit().putString("imagePath",imagePath).apply();
+                sp2.edit().putString("imagePath", imagePaths.toString().replace("[", "").replace("]", "").replace(" ", "")).apply();
                 break;
             case R.id.addImageBtn:
                 showAlertDialogButtonClicked();

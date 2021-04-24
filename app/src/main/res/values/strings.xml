@@ -17,6 +17,9 @@
     <!--Map strings-->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="cofirm_location">Sostenga el toque para ubicar el lugar</string>
+    <string name="continue_">Continue</string>
+
 
 
 </resources>

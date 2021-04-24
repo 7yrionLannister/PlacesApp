@@ -42,10 +42,12 @@
             android:id="@+id/siteAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="2dp"
+            android:autoSizeTextType="uniform"
             android:fontFamily="@font/roboto_regular"
             android:text="@string/new_site_address"
             android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/mapBtn"
             app:layout_constraintTop_toTopOf="@+id/mapBtn" />
 

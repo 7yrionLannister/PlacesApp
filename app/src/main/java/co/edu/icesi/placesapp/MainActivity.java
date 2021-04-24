@@ -1,6 +1,8 @@
 package co.edu.icesi.placesapp;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,17 +39,17 @@ public class MainActivity extends AppCompatActivity {
         searchItemFragment = SearchItemFragment.newInstance();
 
         // se recuperan los extras en caso de que se venga de MapsActivity
-        Bundle extras = getIntent().getExtras();
-        Fragment toFragment = newItemFragment;
-        if(extras != null) {
-            String to = extras.getString("searchitem");
-            if (to != null) {
-                toFragment = searchItemFragment;
-                navigator.setSelectedItemId(R.id.searchItem);
-            }
-        }
+//        Bundle extras = getIntent().getExtras();
+//        Fragment toFragment = newItemFragment;
+//        if(extras != null) {
+//            String to = extras.getString("searchitem");
+//            if (to != null) {
+//                toFragment = searchItemFragment;
+//                navigator.setSelectedItemId(R.id.searchItem);
+//            }
+//        }
 
-        showFragment(toFragment);
+        showFragment(newItemFragment);
         navigator.setOnNavigationItemSelectedListener(
                 (menuItem)->{
                     switch(menuItem.getItemId()){
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(newItemFragment);
                             break;
                         case R.id.mapItem:
+                            SharedPreferences sp = getSharedPreferences("From", Context.MODE_PRIVATE);
+                            sp.edit().putString("from", "navigator").apply();
                             showFragment(mapsFragment);
                             break;
                         case R.id.searchItem:
@@ -73,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
         }, PERMISSIONS_CALLBACK);
+
+        SharedPreferences sp = getSharedPreferences("From_ToNewItemFragment", Context.MODE_PRIVATE);
+        sp.edit().putString("from", "startApp").apply();
     }
 
     public void showFragment(Fragment fragment){
@@ -81,5 +88,12 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
+    }
+
+    public MapsFragment getMapsFragment() {
+        return this.mapsFragment;
+    }
+    public NewItemFragment getNewItemFragment() {
+        return this.newItemFragment;
     }
 }

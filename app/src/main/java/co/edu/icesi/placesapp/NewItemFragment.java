@@ -1,7 +1,9 @@
 package co.edu.icesi.placesapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,6 +15,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +43,9 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
 
     private static final int CAMERA_CALLBACK=11;
     private static final int GALLERY_CALLBACK =12;
+
+    private String from;
+    private String imagePath;
     public NewItemFragment() {
         // Required empty public constructor
     }
@@ -67,6 +73,25 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         mapBtn.setOnClickListener(this);
         addImageBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
+
+        imagePath = "";
+        SharedPreferences sp = getContext().getSharedPreferences("From_ToNewItemFragment",Context.MODE_PRIVATE);
+        SharedPreferences sp2 = getContext().getSharedPreferences("state",Context.MODE_PRIVATE);
+        from = sp.getString("from", "no_from");
+        if(from.equals("MapsFragment")){
+            String address =sp.getString("address", "no_address");
+            siteAddress.setText(address);
+            String name = sp2.getString("name", "no_name");
+            siteNameET.setText(name);
+            String imageP = sp2.getString("imagePath", "no_path");
+            Log.e(">>>>", imageP);
+            if(!imageP.isEmpty()) {
+                Bitmap image = BitmapFactory.decodeFile(imagePath);
+                selectedImage.setImageBitmap(image);
+            }
+        }else if(from.equals("startApp")){
+
+        }
         return root;
     }
     public void showAlertDialogButtonClicked() {
@@ -106,13 +131,15 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == CAMERA_CALLBACK && resultCode == getActivity().RESULT_OK){
-            Bitmap image = BitmapFactory.decodeFile(file.getPath());
+            imagePath = file.getPath();
+            Bitmap image = BitmapFactory.decodeFile(imagePath);
             selectedImage.setImageBitmap(image);
         }else if(requestCode == GALLERY_CALLBACK && resultCode == getActivity().RESULT_OK){
             Uri uri = data.getData();
-            String path = UtilDomi.getPath(getContext(),uri);
-            Bitmap image = BitmapFactory.decodeFile(path);
+            imagePath = UtilDomi.getPath(getContext(),uri);
+            Bitmap image = BitmapFactory.decodeFile(imagePath);
             selectedImage.setImageBitmap(image);
+            Log.e(">>>>", "path original : "+ imagePath);
         }
     }
 
@@ -120,7 +147,13 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mapBtn:
+                SharedPreferences sp = getContext().getSharedPreferences("From", Context.MODE_PRIVATE);
+                sp.edit().putString("from", "newItemFragment").apply();
+                ((MainActivity) this.getActivity()).showFragment(((MainActivity) this.getActivity()).getMapsFragment());
 
+                SharedPreferences sp2 = getContext().getSharedPreferences("state", Context.MODE_PRIVATE);
+                sp2.edit().putString("name", siteNameET.getText().toString()).apply();
+                sp2.edit().putString("imagePath",imagePath).apply();
                 break;
             case R.id.addImageBtn:
                 showAlertDialogButtonClicked();

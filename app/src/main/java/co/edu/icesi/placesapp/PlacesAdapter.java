@@ -51,7 +51,8 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
         return places.size();
     }
 
-
-
-
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+        this.notifyDataSetChanged();
+    }
 }

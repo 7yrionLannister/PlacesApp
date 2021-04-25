@@ -105,8 +105,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
     // viene de dar click en mapa del navigation bar
     public void op2(){
-        Toast toast =Toast.makeText(getContext(),"From navigator",Toast.LENGTH_SHORT);
-        toast.show();
+//        Toast toast =Toast.makeText(getContext(),"From navigator",Toast.LENGTH_SHORT);
+//        toast.show();
     }
 
     @SuppressLint("MissingPermission")

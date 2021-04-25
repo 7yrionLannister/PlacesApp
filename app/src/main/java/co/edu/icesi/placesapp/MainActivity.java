@@ -41,20 +41,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        places = new ArrayList<>();
         // get shared preferences
         sp = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sp.edit().putString("from", "startApp").apply();
-
+//        sp.edit().clear().apply();
         newItemFragment = NewItemFragment.newInstance();
         mapsFragment = MapsFragment.newInstance();
         searchItemFragment = SearchItemFragment.newInstance();
 
+
+        loadPersistentData();
         configureNavigator();
         showFragment(newItemFragment);
 
-        requestPermissions();
-        loadPersistentData();
     }
 
     private void loadPersistentData() {
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 String score = placeSplit[2];
 
                 Place p = new Place(name, imgs, Double.parseDouble(score));
+                places.add(p);
             }
         }
     }
@@ -130,5 +131,9 @@ public class MainActivity extends AppCompatActivity {
     public void registerPlace(Place place) {
         places.add(place);
         sp.edit().putString("places", places.toString()).apply();
+    }
+
+    public List<Place> getPlaces(){
+        return this.places;
     }
 }

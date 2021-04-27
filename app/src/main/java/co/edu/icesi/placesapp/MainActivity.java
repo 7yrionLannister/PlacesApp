@@ -20,11 +20,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.edu.icesi.placesapp.fragments.MapsFragment;
+import co.edu.icesi.placesapp.fragments.NewItemFragment;
+import co.edu.icesi.placesapp.fragments.SearchItemFragment;
 import co.edu.icesi.placesapp.model.Place;
 
 /** <a target="_blank" href="https://icons8.com/icons/set/shop-department">Department Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
  * <a href="https://iconscout.com/icons/import-contacts" target="_blank">Import contacts Icon</a> on <a href="https://iconscout.com">Iconscout</a>
  * <a href="https://iconscout.com/icons/add" target="_blank">Add Icon</a> on <a href="https://iconscout.com">Iconscout</a>
+ * <a target="_blank" href="undefined/icons/set/plus-math">Plus Math icon</a> icon by <a target="_blank" href="">Icons8</a>
  * */
 public class MainActivity extends AppCompatActivity {
 
@@ -132,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         sp.edit().putString("places", json).apply();
     }
 
-    public List<Place> getPlaces(){
+    public List<Place> getPlaces() {
         return this.places;
     }
 }

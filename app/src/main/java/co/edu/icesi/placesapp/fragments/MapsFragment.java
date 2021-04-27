@@ -1,4 +1,4 @@
-package co.edu.icesi.placesapp;
+package co.edu.icesi.placesapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,11 +32,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.edu.icesi.placesapp.MainActivity;
+import co.edu.icesi.placesapp.R;
+import co.edu.icesi.placesapp.model.Place;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback, LocationListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
     private GoogleMap mMap;
     private LocationManager locationManager;
     private boolean track;
     private ArrayList<Marker> markers;
+
+    private Marker chooser;
+
     private ConstraintLayout confirmationPopup;
 
     private SharedPreferences sp;
@@ -81,15 +87,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap = googleMap;
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
-        markers = new ArrayList<>(); // FIXME pedir de persistencia cuando este implementada
+        markers = new ArrayList<>();
 
         sp = getContext().getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         from = sp.getString("from", "from");
         // verifico de donde viene el usuario
         if(from.equals("newItemFragment")){     // si viene desde newItemFragment debo dejarle el mapa libre para que escoja la ubicacion
-            op1();
+            confirmationPopup.setVisibility(View.VISIBLE);
         }else if(from.equals("navigator")){     // si viene desde el click en el navigator se le muestran los lugares
-            op2();
+            MainActivity mainActivity = (MainActivity) getActivity();
+            List<Place> places = mainActivity.getPlaces();
+            for(Place place : places) {
+                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(), place.getLng())).title(place.getName())));
+            }
         }
         setInitialPosition();
 
@@ -98,15 +108,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap.setOnMarkerClickListener(this);
 
         mMap.setMyLocationEnabled(true); // poner un punto azul en la ubicacion actual
-    }
-    // viene de click en el icono mapa de newItemFragment
-    public void op1(){
-        confirmationPopup.setVisibility(View.VISIBLE);
-    }
-    // viene de dar click en mapa del navigation bar
-    public void op2(){
-//        Toast toast =Toast.makeText(getContext(),"From navigator",Toast.LENGTH_SHORT);
-//        toast.show();
     }
 
     @SuppressLint("MissingPermission")
@@ -142,8 +143,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     @Override
     public void onMapLongClick(LatLng latLng) {
        if(from.equals("newItemFragment")) {
-           Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("New marker"));
-           markers.add(marker);
+           if(chooser == null) {
+               chooser = mMap.addMarker(new MarkerOptions().position(latLng).title("Chosen place"));
+           } else {
+               chooser.setPosition(latLng);
+           }
 
            continueBtn.setVisibility(View.VISIBLE);
            continueBtn.setOnClickListener(
@@ -154,8 +158,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                            String add = addresses.get(0).getAddressLine(0)+"\n";
                            sp.edit().putString("from", "MapsFragment").apply();
                            sp.edit().putString("address", add).apply();
+                           LatLng pos = chooser.getPosition();
+                           sp.edit().putString("lat", pos.latitude+"").apply();
+                           sp.edit().putString("lng", pos.longitude+"").apply();
                            ((MainActivity) this.getActivity()).showFragment(((MainActivity) this.getActivity()).getNewItemFragment());
-
                        } catch (IOException e) {
                            e.printStackTrace();
                        }

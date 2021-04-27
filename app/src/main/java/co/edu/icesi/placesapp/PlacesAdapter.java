@@ -1,5 +1,6 @@
 package co.edu.icesi.placesapp;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -34,6 +35,11 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
         View root = inflater.inflate(R.layout.place_row, null);
         ConstraintLayout rowroot= (ConstraintLayout) root;
         PlaceView placeView = new PlaceView(rowroot);
+        placeView.getSeeBtn().setOnClickListener(
+                (view) -> {
+                    // TODO ir al mapa en la posicion del place
+                }
+        );
         return placeView;
     }
 

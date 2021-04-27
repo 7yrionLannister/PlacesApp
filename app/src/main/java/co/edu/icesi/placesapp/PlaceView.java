@@ -1,5 +1,6 @@
 package co.edu.icesi.placesapp;
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
     private TextView name;
     private TextView score;
     private ImageView image;
-
+    private Button seeBtn;
 
     public PlaceView(ConstraintLayout root) {
         super(root);
@@ -21,6 +22,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
         this.name = root.findViewById(R.id.placeName);
         this.score = root.findViewById(R.id.placeScore);
         this.image = root.findViewById(R.id.placeImage);
+        this.seeBtn = root.findViewById(R.id.showPlaceBtn);
     }
 
     public TextView getName() {
@@ -33,5 +35,9 @@ public class PlaceView extends RecyclerView.ViewHolder {
 
     public ImageView getImage() {
         return image;
+    }
+
+    public Button getSeeBtn() {
+        return seeBtn;
     }
 }

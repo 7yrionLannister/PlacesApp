@@ -1,12 +1,9 @@
-package co.edu.icesi.placesapp;
+package co.edu.icesi.placesapp.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -25,14 +22,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.UUID;
 
+import co.edu.icesi.placesapp.MainActivity;
+import co.edu.icesi.placesapp.PlaceImagesAdapter;
+import co.edu.icesi.placesapp.R;
 import co.edu.icesi.placesapp.model.Place;
 import co.edu.icesi.placesapp.utils.UtilDomi;
 
@@ -179,7 +177,9 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                 showAlertDialogButtonClicked();
             break;
             case R.id.registerBtn:
-                Place place = new Place(siteNameET.getText().toString(), imagePaths, 0);
+                double lat = Double.parseDouble(sp.getString("lat", "0"));
+                double lng = Double.parseDouble(sp.getString("lng", "0"));
+                Place place = new Place(siteNameET.getText().toString(), imagePaths, 0, lat, lng);
                 activity.registerPlace(place);
                 break;
         }

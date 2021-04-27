@@ -13,7 +13,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,43 +44,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        places = new ArrayList<>();
+
+        requestPermissions();
+
         // get shared preferences
         sp = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sp.edit().putString("from", "startApp").apply();
-//        sp.edit().clear().apply();
+
         newItemFragment = NewItemFragment.newInstance();
         mapsFragment = MapsFragment.newInstance();
         searchItemFragment = SearchItemFragment.newInstance();
 
-
         loadPersistentData();
         configureNavigator();
         showFragment(newItemFragment);
-
     }
 
     private void loadPersistentData() {
-        places = new ArrayList<>();
-
-        String placesStrings = sp.getString("places", "no_places");
-        if(!placesStrings.equals("no_places")) {
-            placesStrings = placesStrings.replace("[", "").replace("]", "");
-            String[] placesArray = placesStrings.split(",");
-            for(String place : placesArray) {
-                Log.e(">>> Place = ", place);
-                String[] placeSplit = place.split(";");
-                String name = placeSplit[0];
-                String[] images = placeSplit[1].split(":");
-                List<String> imgs = new ArrayList<>();
-                for(String img : images) {
-                    imgs.add(img);
-                }
-                String score = placeSplit[2];
-
-                Place p = new Place(name, imgs, Double.parseDouble(score));
-                places.add(p);
-            }
+        Gson gson = new Gson();
+        String json = sp.getString("places", "no_places");
+        Log.e(">>>", "places_json = " + json);
+        if(json.equals("no_places")) {
+            places = new ArrayList<>();
+        } else {
+            Type type = new TypeToken<ArrayList<Place>>(){}.getType();
+            places = gson.fromJson(json, type);
+        }
+        for(Place p : places) {
+            Log.e(">>>", p.getName());
         }
     }
 
@@ -130,7 +124,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void registerPlace(Place place) {
         places.add(place);
-        sp.edit().putString("places", places.toString()).apply();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(places);
+        Log.e(">>>", "places_json = " + json);
+
+        sp.edit().putString("places", json).apply();
     }
 
     public List<Place> getPlaces(){

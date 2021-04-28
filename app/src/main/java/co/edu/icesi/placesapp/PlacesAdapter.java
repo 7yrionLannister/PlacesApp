@@ -1,7 +1,6 @@
 package co.edu.icesi.placesapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -60,7 +59,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
                     sp.edit().putString("latPlace", place.getLat()+"").apply();
                     sp.edit().putString("lngPlace", place.getLng()+"").apply();
                     Log.e(">>>", "Go to " + place.getLat() + "," + place.getLng());
-                    mainActivity.showFragment(mainActivity.getMapsFragment());
+                    mainActivity.setSelectedFragment(R.id.mapItem);
                 }
         );
     }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,11 +20,6 @@ public class PlaceImagesAdapter extends RecyclerView.Adapter<PlaceImageView> {
     public PlaceImagesAdapter() {
         images = new ArrayList<>();
     }
-
-    /*public void addImage(String imagePath){
-        images.add(imagePath);
-        notifyDataSetChanged();
-    }*/
 
     @NonNull
     @Override

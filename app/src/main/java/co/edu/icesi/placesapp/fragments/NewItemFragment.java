@@ -122,7 +122,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Choose");
 
-        String[] options = {"Camera", "Galery"};
+        String[] options = {"Camera", "Gallery"};
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -190,7 +190,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         if (destination != null) {
             destination.close();
         }
-
     }
 
     @Override
@@ -199,9 +198,9 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.mapBtn:
                 sp.edit().putString("from", "newItemFragment").apply();
-                activity.showFragment(activity.getMapsFragment());
                 sp.edit().putString("name", siteNameET.getText().toString()).apply();
                 sp.edit().putString("imagePath", imagePaths.toString().replace("[", "").replace("]", "").replace(" ", "")).apply();
+                activity.setSelectedFragment(R.id.mapItem);
                 break;
             case R.id.addImageBtn:
                 showAlertDialogButtonClicked();
@@ -217,7 +216,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                 sp.edit().putString("latPlace", place.getLat()+"").apply();
                 sp.edit().putString("lngPlace", place.getLng()+"").apply();
                 activity.registerPlace(place);
-                activity.showFragment(activity.getMapsFragment());
+                activity.setSelectedFragment(R.id.mapItem);
                 break;
         }
     }

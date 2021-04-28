@@ -38,12 +38,15 @@ public class MainActivity extends AppCompatActivity {
     private SearchItemFragment searchItemFragment;
 
     private BottomNavigationView navigator;
+    private boolean fromFragmentFlow;
+
     private List<Place> places;
 
     private SharedPreferences sp;
     public static final String PREFERENCES = "places-data";
 
     private static final int PERMISSIONS_CALLBACK = 11;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadPersistentData();
         configureNavigator();
+        fromFragmentFlow = false;
         showFragment(newItemFragment);
     }
 
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                             showFragment(newItemFragment);
                             break;
                         case R.id.mapItem:
-                            sp.edit().putString("from", "navigator").apply();
                             showFragment(mapsFragment);
                             break;
                         case R.id.searchItem:
@@ -111,19 +114,18 @@ public class MainActivity extends AppCompatActivity {
         }, PERMISSIONS_CALLBACK);
     }
 
-    public void showFragment(Fragment fragment){
+    private void showFragment(Fragment fragment){
         // todas las actividades vienen con el fragmentManager solo lo debemos llamar
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
-    }
 
-    public MapsFragment getMapsFragment() {
-        return this.mapsFragment;
-    }
-    public NewItemFragment getNewItemFragment() {
-        return this.newItemFragment;
+        String from = sp.getString("from", "no_from");
+        if(!fromFragmentFlow && !from.equals("navigatorAfterRegister")) {
+            sp.edit().putString("from", "navigator").apply();
+        }
+        fromFragmentFlow = false;
     }
 
     public void registerPlace(Place place) {
@@ -140,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
         return this.places;
     }
 
-    public SearchItemFragment getSearchItemFragment() {
-        return searchItemFragment;
+    public void setSelectedFragment(int id) {
+        fromFragmentFlow = true;
+        navigator.setSelectedItemId(id);
     }
 }

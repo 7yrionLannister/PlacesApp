@@ -113,6 +113,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         sp = getContext().getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         from = sp.getString("from", "from");
+        Log.e(">>>>>>>>", from);
         // verifico de donde viene el usuario
         if(from.equals("newItemFragment")){     // si viene desde newItemFragment debo dejarle el mapa libre para que escoja la ubicacion
             confirmationPopup.setVisibility(View.VISIBLE);
@@ -204,13 +205,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     String json = gson.toJson(mainActivity.getPlaces());
                     Log.e(">>>", "places_json = " + json);
                     sp.edit().putString("places", json).apply();
-                   mainActivity.showFragment(mainActivity.getSearchItemFragment());
+                    mainActivity.setSelectedFragment(R.id.searchItem);
                 });
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
     }
 
     public void setTrack(boolean track) {
@@ -239,7 +240,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                            sp.edit().putString("lat", pos.latitude+"").apply();
                            sp.edit().putString("lng", pos.longitude+"").apply();
                            chooser = null;
-                           mainActivity.showFragment(mainActivity.getNewItemFragment());
+                           mainActivity.setSelectedFragment(R.id.newItem);
                        } catch (IOException e) {
                            e.printStackTrace();
                        }

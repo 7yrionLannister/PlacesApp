@@ -25,6 +25,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -60,14 +64,12 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-
     public static NewItemFragment newInstance() {
         NewItemFragment fragment = new NewItemFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,12 +116,11 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         }
         return root;
     }
-    public void showAlertDialogButtonClicked() {
 
+    public void showAlertDialogButtonClicked() {
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Choose");
-
 
         String[] options = {"Camera", "Galery"};
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -155,12 +156,41 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
             imagePaths.add(imagePath);
             adapter.addImages(imagePaths);
         }else if(requestCode == GALLERY_CALLBACK && resultCode == getActivity().RESULT_OK){
+            file = new File(getContext().getExternalFilesDir(null), "/photo" + UUID.randomUUID().toString() + ".png");
             Uri uri = data.getData();
             String imagePath = UtilDomi.getPath(getContext(),uri);
-            imagePaths.add(imagePath);
+            try {
+                copyFile(new File(imagePath), file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            imagePaths.add(file.getAbsolutePath());
             adapter.addImages(imagePaths);
             Log.e(">>>>", "path original : "+ imagePath);
         }
+    }
+
+    /* https://stackoverflow.com/a/21496955/14263660
+     * */
+    private void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!sourceFile.exists()) {
+            return;
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+        source = new FileInputStream(sourceFile).getChannel();
+        destination = new FileOutputStream(destFile).getChannel();
+        if (destination != null && source != null) {
+            destination.transferFrom(source, 0, source.size());
+        }
+        if (source != null) {
+            source.close();
+        }
+        if (destination != null) {
+            destination.close();
+        }
+
     }
 
     @Override
@@ -183,7 +213,9 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                 siteAddress.setText(address);
 
                 Place place = new Place(siteNameET.getText().toString(), imagePaths, 0, lat, lng,address);
-                sp.edit().putString("from", "navigator").apply(); // cuando le doy registrar quiero que me lleve a la vista como si diera en el navigator
+                sp.edit().putString("from", "navigatorAfterRegister").apply(); // cuando le doy registrar quiero que me lleve a la vista como si diera en el navigator
+                sp.edit().putString("latPlace", place.getLat()+"").apply();
+                sp.edit().putString("lngPlace", place.getLng()+"").apply();
                 activity.registerPlace(place);
                 activity.showFragment(activity.getMapsFragment());
                 break;

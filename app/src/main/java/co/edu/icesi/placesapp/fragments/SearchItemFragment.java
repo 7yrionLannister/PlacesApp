@@ -40,7 +40,7 @@ public class SearchItemFragment extends Fragment {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         placesViewList.setLayoutManager(layout);
 
-        adapter = new PlacesAdapter();
+        adapter = new PlacesAdapter((MainActivity) getActivity());
         placesViewList.setAdapter(adapter);
         return root;
     }

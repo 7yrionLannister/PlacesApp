@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,14 +95,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         // verifico de donde viene el usuario
         if(from.equals("newItemFragment")){     // si viene desde newItemFragment debo dejarle el mapa libre para que escoja la ubicacion
             confirmationPopup.setVisibility(View.VISIBLE);
-        }else if(from.equals("navigator")){     // si viene desde el click en el navigator se le muestran los lugares
-            MainActivity mainActivity = (MainActivity) getActivity();
-            List<Place> places = mainActivity.getPlaces();
-            for(Place place : places) {
-                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(), place.getLng())).title(place.getName())));
-            }
+        } else if(from.equals("navigator")) {     // si viene desde el click en el navigator se activa el rastreo
+            track = true;
         }
-        setInitialPosition();
+
+        if(from.equals("searchItemFragment")) {
+            double latPlace = Double.parseDouble(sp.getString("latPlace","0"));
+            double lngPlace = Double.parseDouble(sp.getString("lngPlace","0"));
+            Log.e(">>>", "Center camera at " + latPlace + "," + lngPlace);
+            updateMyLocation(latPlace, lngPlace);
+        } else {
+            setInitialPosition();
+        }
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        List<Place> places = mainActivity.getPlaces();
+        for(Place place : places) {
+            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(), place.getLng())).title(place.getName())));
+        }
 
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
@@ -114,21 +125,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     public void setInitialPosition() {
         Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if(loc != null) {
-            updateMyLocation(loc);
+            updateMyLocation(loc.getLatitude(), loc.getLongitude());
         }
     }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
         // TODO aqui se actualiza la distancia de la persona a los sitios que ha registrado
-        updateMyLocation(location);
+        if(track) { // solo sigue al usuario si esta habilitado el rastreo, para que pueda manipular el mapa sin que lo obligue a ver su ubicacion siempre
+            updateMyLocation(location.getLatitude(), location.getLongitude());
+        }
     }
 
-    private void updateMyLocation(Location loc) {
-        LatLng myPos = new LatLng(loc.getLatitude(), loc.getLongitude());
-        if(track) { // solo sigue al usuario si esta habilitado el rastreo, para que pueda manipular el mapa sin que lo obligue a ver su ubicacion siempre
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(myPos));
-        }
+    private void updateMyLocation(double lat, double lng) {
+        LatLng myPos = new LatLng(lat, lng);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 13));
     }
 
     @Override
@@ -139,6 +150,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     public void setTrack(boolean track) {
         this.track = track;
     }
+
 
     @Override
     public void onMapLongClick(LatLng latLng) {

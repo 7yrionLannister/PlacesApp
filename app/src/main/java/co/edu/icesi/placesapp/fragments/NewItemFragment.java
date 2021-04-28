@@ -179,8 +179,13 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
             case R.id.registerBtn:
                 double lat = Double.parseDouble(sp.getString("lat", "0"));
                 double lng = Double.parseDouble(sp.getString("lng", "0"));
-                Place place = new Place(siteNameET.getText().toString(), imagePaths, 0, lat, lng);
+                String address =sp.getString("address", "no_address");
+                siteAddress.setText(address);
+
+                Place place = new Place(siteNameET.getText().toString(), imagePaths, 0, lat, lng,address);
+                sp.edit().putString("from", "navigator").apply(); // cuando le doy registrar quiero que me lleve a la vista como si diera en el navigator
                 activity.registerPlace(place);
+                activity.showFragment(activity.getMapsFragment());
                 break;
         }
     }

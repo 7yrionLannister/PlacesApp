@@ -5,16 +5,18 @@ import java.util.ArrayList;
 public class Place {
     private String name;
     private ArrayList<String> images;
+    private String address;
     private double score;
     private double lat;
     private double lng;
 
-    public Place(String name, ArrayList<String> images, double score, double lat, double lng) {
+    public Place(String name, ArrayList<String> images, double score, double lat, double lng, String address) {
         this.name = name;
         this.images = images;
         this.score = score;
         this.lat = lat;
         this.lng = lng;
+        this.address=address;
     }
 
     public String getName() {
@@ -55,5 +57,13 @@ public class Place {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

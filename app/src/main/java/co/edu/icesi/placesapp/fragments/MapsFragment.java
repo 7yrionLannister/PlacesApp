@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +33,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,12 +52,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private Marker chooser;
 
     private ConstraintLayout confirmationPopup;
+    private ConstraintLayout scorePopup;
 
     private SharedPreferences sp;
 
     private Button continueBtn;
     private String from;  // me dice de donde viene el usuario si de newItemFragment o de click en el navigator
+    private TextView namePlace;
+    private TextView placeAdd;
+    private RatingBar ratingPlace;
+    private ImageView imagePlace;
+    private Button confirmScorePlace;
 
+
+    private LatLng myPos;
     public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
         Bundle args = new Bundle();
@@ -66,6 +80,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         continueBtn = view.findViewById(R.id.continueBtn);
+        namePlace = view.findViewById(R.id.namePlace);
+        placeAdd = view.findViewById(R.id.placeAdd);
+        ratingPlace = view.findViewById(R.id.ratingPlace);
+        imagePlace = view.findViewById(R.id.imagePlace);
+        confirmScorePlace = view.findViewById(R.id.confimScoreBtn);
+        scorePopup = view.findViewById(R.id.scorePopup);
         confirmationPopup = view.findViewById(R.id.confirm_location_popup);
         return view;
 
@@ -104,15 +124,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             double lngPlace = Double.parseDouble(sp.getString("lngPlace","0"));
             Log.e(">>>", "Center camera at " + latPlace + "," + lngPlace);
             updateMyLocation(latPlace, lngPlace);
-        } else {
+        }else{
             setInitialPosition();
         }
-
         MainActivity mainActivity = (MainActivity) getActivity();
         List<Place> places = mainActivity.getPlaces();
-        for(Place place : places) {
+        for (Place place : places) {
             markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(), place.getLng())).title(place.getName())));
         }
+
 
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
@@ -138,10 +158,51 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     private void updateMyLocation(double lat, double lng) {
-        LatLng myPos = new LatLng(lat, lng);
+        myPos = new LatLng(lat, lng);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 13));
+
+        if(!from.equals("newItemFragment")){
+            computeDistances();
+        }
     }
 
+    private void computeDistances() {
+
+        for(Marker marker: markers){
+            LatLng markerLoc = marker.getPosition();
+            double distanceMt = SphericalUtil.computeDistanceBetween(markerLoc, myPos);
+            if(distanceMt<100){
+
+                showPopUp2(markerLoc);
+            }
+        }
+    }
+
+    private void showPopUp2(LatLng markerLoc){
+        scorePopup.setVisibility(View.VISIBLE);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        List<Place> places = mainActivity.getPlaces();
+        int pos = -1;
+        for(int i=0; i<places.size(); i++){
+            Place currentPlace = places.get(i);
+            if(currentPlace.getLat()==markerLoc.latitude && currentPlace.getLng()==markerLoc.longitude){
+                namePlace.setText(currentPlace.getName());
+                placeAdd.setText(currentPlace.getAddress());
+                ratingPlace.setRating((float) currentPlace.getScore());
+                Bitmap bitMap = BitmapFactory.decodeFile(currentPlace.getImages().get(0));
+                imagePlace.setImageBitmap(bitMap);
+                pos=i;
+            }
+        }
+        final int posi = pos;
+        confirmScorePlace.setOnClickListener(
+                v -> {
+                   double score = ratingPlace.getRating();
+                   mainActivity.getPlaces().get(posi).setScore(score);
+                   mainActivity.showFragment(mainActivity.getSearchItemFragment());
+                });
+
+    }
     @Override
     public void onMapClick(LatLng latLng) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));

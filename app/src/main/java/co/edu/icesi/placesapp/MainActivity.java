@@ -139,4 +139,8 @@ public class MainActivity extends AppCompatActivity {
     public List<Place> getPlaces() {
         return this.places;
     }
+
+    public SearchItemFragment getSearchItemFragment() {
+        return searchItemFragment;
+    }
 }

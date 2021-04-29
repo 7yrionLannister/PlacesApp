@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
+    style="@style/fragmentBack"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@color/whitetransparent"
+            android:minHeight="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/title_toolbar"
+            app:titleTextColor="@color/white" />
 
         <TextView
             android:id="@+id/textView"
+            style="@style/generalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/roboto_regular"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
@@ -21,25 +37,29 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
         <TextView
             android:id="@+id/textView2"
+            style="@style/generalText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="45dp"
             android:fontFamily="@font/roboto_regular"
             android:text="@string/new_site_description"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
             android:id="@+id/siteAddress"
+            style="@style/generalText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
@@ -56,7 +76,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="32dp"
-            android:background="@android:drawable/screen_background_light_transparent"
+            android:background="@drawable/pin"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="@+id/siteNameET"
             app:layout_constraintTop_toBottomOf="@+id/siteNameET"
@@ -64,6 +84,7 @@
 
         <TextView
             android:id="@+id/textView3"
+            style="@style/generalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="58dp"
@@ -74,6 +95,7 @@
 
         <EditText
             android:id="@+id/siteNameET"
+            style="@style/AppEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="59dp"
@@ -96,6 +118,7 @@
 
         <TextView
             android:id="@+id/textView7"
+            style="@style/generalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
@@ -107,20 +130,24 @@
             android:id="@+id/addImageBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="16dp"
-            android:background="@android:drawable/screen_background_light_transparent"
+            android:layout_marginEnd="15dp"
             android:scaleType="fitXY"
-            app:layout_constraintStart_toStartOf="@+id/textView7"
+            app:layout_constraintEnd_toStartOf="@+id/place_images_list_view"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/add" />
 
         <Button
             android:id="@+id/registerBtn"
+            style="@style/buttonRed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/register_new_site"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addImageBtn" />

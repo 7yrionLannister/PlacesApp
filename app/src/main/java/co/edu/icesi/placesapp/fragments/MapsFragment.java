@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.AndroidRuntimeException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,15 +109,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        initialConfiguaration(mMap);
 
+    }
+    @SuppressLint("MissingPermission")
+    public void initialConfiguaration(GoogleMap googleMap){
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
+
         markers = new ArrayList<>();
 
         sp = getContext().getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         from = sp.getString("from", "from");
         Log.e(">>>>>>>>", from);
         // verifico de donde viene el usuario
-        if(from.equals("newItemFragment")){     // si viene desde newItemFragment debo dejarle el mapa libre para que escoja la ubicacion
+        if(from.equals("newItemFragment")){
             confirmationPopup.setVisibility(View.VISIBLE);
         } else if(from.equals("navigator")) {     // si viene desde el click en el navigator se activa el rastreo
             track = true;
@@ -141,7 +148,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         mMap.setMyLocationEnabled(true); // poner un punto azul en la ubicacion actual
     }
-
     @SuppressLint("MissingPermission")
     public void setInitialPosition() {
         Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -251,5 +257,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        Toast toast= Toast.makeText(getContext(), "Por favor prenda el GPS", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        initialConfiguaration(mMap);
     }
 }

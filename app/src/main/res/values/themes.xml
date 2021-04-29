@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.PlacesApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.PlacesApp" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -12,5 +12,29 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="buttonRed" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/buttonback</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="fragmentBack">
+        <item name="android:background">@color/gray</item>
+    </style>
+    <style name="generalText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="AppEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edittextback</item>
+        <item name="android:padding">14dp</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="navigator" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/gray</item>
+        <item name="android:iconTint">@color/white</item>
+    </style>
+    <style name="itemNavigator">
+
     </style>
 </resources>

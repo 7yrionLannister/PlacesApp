@@ -28,6 +28,9 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentContainer"
-        app:menu="@menu/main_menu" />
+        app:menu="@menu/main_menu"
+        app:itemTextAppearanceActive="@font/roboto_bold"
+        app:itemTextAppearanceInactive="@font/roboto_thin"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
